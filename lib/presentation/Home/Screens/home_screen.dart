@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:sri_mahalakshmi/core/utility/app_colors.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
+import 'package:sri_mahalakshmi/presentation/menu/menu_screens.dart';
 
 import '../../../core/utility/app_textstyles.dart';
 
@@ -74,16 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         Expanded(
                           flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.teal,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 24,
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuScreens(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         ),
@@ -177,16 +188,28 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
 
-                          // Right Icon
-                          Container(
-                            width: 60,
-                            height: 60,
-                            margin: EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
+
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MenuScreens(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              margin: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Image.asset(AppImages.silver),
+                              ),
                             ),
-                            child: Center(child: Image.asset(AppImages.silver)),
                           ),
                         ],
                       ),

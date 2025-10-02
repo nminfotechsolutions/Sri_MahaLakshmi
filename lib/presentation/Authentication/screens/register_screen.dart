@@ -3,11 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/core/widgets/animated_buttons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sri_mahalakshmi/presentation/Authentication/controllers/login_controller.dart';
 
 import '../../../core/utility/app_colors.dart';
+import 'package:get/get.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController fNameController = TextEditingController();
+  final TextEditingController lNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController mobileController = TextEditingController();
+  final TextEditingController aadharController = TextEditingController();
+  final TextEditingController panController = TextEditingController();
+  final TextEditingController address1Controller = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController stateController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confrimPassController = TextEditingController();
+  final TextEditingController mpinController = TextEditingController();
+
+  final LoginController controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +87,6 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 40),
 
-
                       Row(
                         children: [
                           // First Name
@@ -82,15 +104,20 @@ class RegisterScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 TextField(
+                                  controller: fNameController,
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
                                     hintText: "Enter your First Name",
-                                    hintStyle: const TextStyle(color: Colors.black45),
+                                    hintStyle: const TextStyle(
+                                      color: Colors.black45,
+                                    ),
                                     filled: true,
                                     fillColor: Colors.white,
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(color: Colors.teal),
+                                      borderSide: const BorderSide(
+                                        color: Colors.teal,
+                                      ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(14),
@@ -104,8 +131,9 @@ class RegisterScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 20), // spacing between first and last name
-
+                          const SizedBox(
+                            width: 20,
+                          ), // spacing between first and last name
                           // Last Name
                           Expanded(
                             child: Column(
@@ -121,15 +149,20 @@ class RegisterScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 TextField(
+                                  controller: lNameController,
                                   style: const TextStyle(color: Colors.black),
                                   decoration: InputDecoration(
                                     hintText: "Enter your Last Name",
-                                    hintStyle: const TextStyle(color: Colors.black45),
+                                    hintStyle: const TextStyle(
+                                      color: Colors.black45,
+                                    ),
                                     filled: true,
                                     fillColor: Colors.white,
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(color: Colors.teal),
+                                      borderSide: const BorderSide(
+                                        color: Colors.teal,
+                                      ),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(14),
@@ -159,6 +192,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: emailController,
                         keyboardType: TextInputType.emailAddress,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
@@ -196,6 +230,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: mobileController,
                         keyboardType: TextInputType.phone,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
@@ -233,6 +268,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: passwordController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
@@ -270,6 +306,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        controller: confrimPassController,
                         obscureText: true,
                         style: const TextStyle(color: Colors.black),
                         decoration: InputDecoration(
@@ -295,9 +332,40 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 30),
-
-                      // Register Button
-                      AnimatedButton(text: 'Register', onPressed: () {}),
+                      Obx(() {
+                        return Column(
+                          children: [
+                            if (controller.errorMessage.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  controller.errorMessage.value,
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            AnimatedButton(
+                              text: 'Register',
+                              isLoading: controller.isLoading,
+                              onPressed: () {
+                                controller.registerUser(
+                                  fName: fNameController.text.trim(),
+                                  lName: lNameController.text.trim(),
+                                  email: emailController.text.trim(),
+                                  mobileNo: mobileController.text.trim(),
+                                  aadhar: aadharController.text.trim(),
+                                  pan: panController.text.trim(),
+                                  address1: address1Controller.text.trim(),
+                                  city: cityController.text.trim(),
+                                  state: stateController.text.trim(),
+                                  country: countryController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  mpin: mpinController.text.trim(),
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      }),
 
                       const SizedBox(height: 30),
 
