@@ -79,6 +79,73 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> login({
+    required String fName,
+    required String lName,
+    required String email,
+    required String mobileNo,
+    required String aadhar,
+    required String pan,
+    required String address1,
+    String? address2,
+    required String city,
+    required String state,
+    required String country,
+    required String password,
+    required String mpin,
+  }) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      // successMessage.value = '';
+
+      final url = Uri.parse(ApiUrl.customerSignUp);
+
+      // Prepare JSON body
+      final body = jsonEncode({
+        "FNAME": fName,
+        "LNAME": lName,
+        "EMAIL": email,
+        "MOBILENO": mobileNo,
+        "AADHAR": aadhar,
+        "PAN": pan,
+        "ADDRESS1": address1,
+        "ADDRESS2": address2 ?? '',
+        "CITY": city,
+        "STATE": state,
+        "COUNTRY": country,
+        "PASSWORD": password,
+        "MPIN": mpin,
+        "ACT": "Y",
+      });
+
+      // Send POST request
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == 200) {
+        print(data.toString());
+        print(response.body);
+        Get.to(HomeScreen());
+        print(data['message']);
+        // successMessage.value = data['message'] ?? 'Registered successfully';
+      } else {
+        print('Login Failed');
+        errorMessage.value = data['message'] ?? 'Registration failed';
+      }
+    } catch (e) {
+      print(e);
+      errorMessage.value = 'Error: $e';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // Future<void> fetchUser(String email) async {
   //   try {
   //     isLoading.value = true;

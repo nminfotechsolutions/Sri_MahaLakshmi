@@ -36,10 +36,7 @@ class LoginScreens extends StatelessWidget {
                 SizedBox(height: 20),
                 Hero(
                   tag: 'appLogo', // unique tag
-                  child: Image.asset(
-                    AppImages.log_2,
-                    height: 150,
-                  ),
+                  child: Image.asset(AppImages.log_2, height: 150),
                 ),
                 SizedBox(height: 30),
                 Center(
@@ -200,12 +197,15 @@ class LoginScreens extends StatelessWidget {
                             ),
                             SizedBox(height: 5),
 
-                            AnimatedButton(text: 'Login', onPressed: () {
-                              AnimatedNavigation.navigateWithAnimation(
-                                context,
-                                const HomeScreen(),
-                              );
-                            }),
+                            AnimatedButton(
+                              text: 'Login',
+                              onPressed: () {
+                                AnimatedNavigation.navigateWithAnimation(
+                                  context,
+                                  const HomeScreen(),
+                                );
+                              },
+                            ),
                             SizedBox(height: 30),
 
                             Text.rich(

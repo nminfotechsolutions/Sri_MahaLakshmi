@@ -4,8 +4,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/utility/app_colors.dart';
-import '../../core/utility/app_images.dart';
+import '../../../core/utility/app_colors.dart';
+import '../../../core/utility/app_images.dart';
+import 'kyc_screens.dart';
 
 class MenuScreens extends StatefulWidget {
   const MenuScreens({super.key});
@@ -71,25 +72,41 @@ class _MenuScreensState extends State<MenuScreens> {
                       ].map((title) {
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColor.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: ListTile(
-                              title: AppTextStyles.textWith600(
-                                text: title,
-                                fontSize: 20,
-                                color: AppColor.lightBlack,
+                          child: InkWell(
+                            onTap: () {
+                              if (title == 'Kyc') {
+                                // Navigate to KYC Screen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => KycScreen(),
+                                  ),
+                                );
+                              } else {
+                                // Handle other menu items
+                                print('Tapped: $title');
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColor.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
                               ),
-                              trailing: Icon(Icons.chevron_right),
+                              child: ListTile(
+                                title: AppTextStyles.textWith600(
+                                  text: title,
+                                  fontSize: 20,
+                                  color: AppColor.lightBlack,
+                                ),
+                                trailing: Icon(Icons.chevron_right),
+                              ),
                             ),
                           ),
                         );
@@ -98,6 +115,7 @@ class _MenuScreensState extends State<MenuScreens> {
                   ),
                 ),
               ),
+
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
