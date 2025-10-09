@@ -9,7 +9,8 @@ import '../../../core/utility/app_colors.dart';
 import 'package:get/get.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final String? mobileNumber;
+  const RegisterScreen({super.key, this.mobileNumber});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -31,9 +32,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController mpinController = TextEditingController();
 
   final LoginController controller = Get.put(LoginController());
+  @override
+  void initState() {
+    super.initState();
+    if (widget.mobileNumber != null && widget.mobileNumber!.isNotEmpty) {
+      mobileController.text = widget.mobileNumber!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool isReadOnly =
+        widget.mobileNumber != null && widget.mobileNumber!.isNotEmpty;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -86,97 +96,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         style: TextStyle(fontSize: 14, color: Colors.black54),
                       ),
                       const SizedBox(height: 40),
-
-                      Row(
-                        children: [
-                          // First Name
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'First Name',
-                                  style: GoogleFonts.ibmPlexSans(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.lightBlack,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  controller: fNameController,
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Enter your First Name",
-                                    hintStyle: const TextStyle(
-                                      color: Colors.black45,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(
-                                        color: Colors.teal,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(
-                                        color: Colors.teal,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      Text(
+                        'First Name',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.lightBlack,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: fNameController,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: "Enter your First Name",
+                          hintStyle: const TextStyle(color: Colors.black45),
+                          filled: true,
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(color: Colors.teal),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: Colors.teal,
+                              width: 2,
                             ),
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ), // spacing between first and last name
-                          // Last Name
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Last Name',
-                                  style: GoogleFonts.ibmPlexSans(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.lightBlack,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  controller: lNameController,
-                                  style: const TextStyle(color: Colors.black),
-                                  decoration: InputDecoration(
-                                    hintText: "Enter your Last Name",
-                                    hintStyle: const TextStyle(
-                                      color: Colors.black45,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(
-                                        color: Colors.teal,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: const BorderSide(
-                                        color: Colors.teal,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Last Name',
+                        style: GoogleFonts.ibmPlexSans(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.lightBlack,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: lNameController,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          hintText: "Enter your Last Name",
+                          hintStyle: const TextStyle(color: Colors.black45),
+                          filled: true,
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(color: Colors.teal),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: Colors.teal,
+                              width: 2,
                             ),
                           ),
-                        ],
+                        ),
                       ),
 
                       const SizedBox(height: 20),
@@ -219,7 +198,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 20),
 
-                      // Phone Number
                       Text(
                         'Mobile Number',
                         style: GoogleFonts.ibmPlexSans(
@@ -230,6 +208,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 10),
                       TextField(
+                        readOnly: isReadOnly,
                         controller: mobileController,
                         keyboardType: TextInputType.phone,
                         style: const TextStyle(color: Colors.black),

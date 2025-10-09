@@ -10,4 +10,5 @@ class AppImages {
   static String myPlan = "assets/images/myPlan.png";
   static String my_plan2 = "assets/images/my_plan2.png";
   static String t_history = "assets/images/t_history.png";
+  static String guarante = "assets/images/guarante.png";
 }

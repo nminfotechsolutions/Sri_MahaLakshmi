@@ -1,17 +1,29 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/core/widgets/animated_buttons.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sri_mahalakshmi/presentation/Authentication/controllers/login_controller.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/screens/register_screen.dart';
 import 'package:sri_mahalakshmi/presentation/Home/Screens/home_screen.dart';
 
 import '../../../core/utility/app_colors.dart';
+import '../../../core/utility/snack_bar.dart';
 import '../../../core/widgets/animated_navigation.dart';
+import 'package:get/get.dart';
 
-class LoginScreens extends StatelessWidget {
+class LoginScreens extends StatefulWidget {
   const LoginScreens({super.key});
 
+  @override
+  State<LoginScreens> createState() => _LoginScreensState();
+}
+
+class _LoginScreensState extends State<LoginScreens> {
+  final LoginController controller = Get.put(LoginController());
+  final TextEditingController mobileNumber = TextEditingController();
+  final TextEditingController password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +123,15 @@ class LoginScreens extends StatelessWidget {
                             ),
                             SizedBox(height: 10),
                             TextField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(
+                                  10,
+                                ), // limit to 10 chars
+                                FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]'),
+                                ), // digits only
+                              ],
+                              controller: mobileNumber,
                               keyboardType: TextInputType.phone,
                               style: const TextStyle(color: Colors.black),
                               decoration: InputDecoration(
@@ -141,71 +162,156 @@ class LoginScreens extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
 
-                            Row(
-                              children: [
-                                Text(
-                                  'Password',
-                                  style: GoogleFonts.ibmPlexSans(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColor.lightBlack,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            TextField(
-                              obscureText: true,
-                              style: const TextStyle(color: Colors.black),
-                              decoration: InputDecoration(
-                                hintText: "Enter your Password",
-                                hintStyle: const TextStyle(
-                                  color: Colors.black45,
-                                ),
-                                prefixIcon: const Icon(
-                                  Icons.lock,
-                                  color: Colors.teal,
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: Colors.teal,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: Colors.teal,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(color: Colors.black54),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
+                            // Row(
+                            //   children: [
+                            //     Text(
+                            //       'Password',
+                            //       style: GoogleFonts.ibmPlexSans(
+                            //         fontSize: 15,
+                            //         fontWeight: FontWeight.w600,
+                            //         color: AppColor.lightBlack,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 10),
+                            // TextField(
+                            //   controller: password,
+                            //
+                            //   obscureText: true,
+                            //   style: const TextStyle(color: Colors.black),
+                            //   decoration: InputDecoration(
+                            //     hintText: "Enter your Password",
+                            //     hintStyle: const TextStyle(
+                            //       color: Colors.black45,
+                            //     ),
+                            //     prefixIcon: const Icon(
+                            //       Icons.lock,
+                            //       color: Colors.teal,
+                            //     ),
+                            //     filled: true,
+                            //     fillColor: Colors.white,
+                            //     enabledBorder: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(14),
+                            //       borderSide: const BorderSide(
+                            //         color: Colors.teal,
+                            //       ),
+                            //     ),
+                            //     focusedBorder: OutlineInputBorder(
+                            //       borderRadius: BorderRadius.circular(14),
+                            //       borderSide: const BorderSide(
+                            //         color: Colors.teal,
+                            //         width: 2,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            Obx(() {
+                              return controller.isPasswordEnabled.value
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Password',
+                                          style: GoogleFonts.ibmPlexSans(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColor.lightBlack,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        TextField(
+                                          controller: password,
+                                          obscureText: false,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Enter your Password",
+                                            hintStyle: const TextStyle(
+                                              color: Colors.black45,
+                                            ),
+                                            prefixIcon: const Icon(
+                                              Icons.lock,
+                                              color: Colors.teal,
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: const BorderSide(
+                                                color: Colors.teal,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              borderSide: const BorderSide(
+                                                color: Colors.teal,
+                                                width: 2,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: const Text(
+                                                "Forgot Password?",
+                                                style: TextStyle(
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        SizedBox(height: 5),
+                                      ],
+                                    )
+                                  : const SizedBox.shrink();
+                            }),
 
                             AnimatedButton(
-                              text: 'Login',
+                              isLoading: controller.isLoading,
+                              text: controller.isPasswordEnabled.value
+                                  ? 'Login'
+                                  : 'Continue',
                               onPressed: () {
-                                AnimatedNavigation.navigateWithAnimation(
-                                  context,
-                                  const HomeScreen(),
-                                );
+                                final mobile = mobileNumber.text.trim();
+
+                                if (mobile.isEmpty || mobile.length != 10) {
+                                  CustomSnackBar.showError(
+                                    "Enter valid mobile number",
+                                  );
+                                  return;
+                                }
+
+                                if (!controller.isPasswordEnabled.value) {
+                                  // Step 1: Check mobile first
+                                  controller.checkMobile(mobile);
+                                } else {
+                                  // Step 2: Login with password
+                                  final pass = password.text.trim();
+                                  if (pass.isEmpty) {
+                                    CustomSnackBar.showError(
+                                      "Please enter password",
+                                    );
+                                    return;
+                                  }
+                                  controller.login(
+                                    mobileNo: mobile,
+                                    passwords: pass,
+                                  );
+                                }
                               },
                             ),
+
                             SizedBox(height: 30),
 
                             Text.rich(

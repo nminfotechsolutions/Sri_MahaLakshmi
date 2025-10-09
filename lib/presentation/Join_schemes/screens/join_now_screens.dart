@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/core/utility/app_loader.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
+import 'package:sri_mahalakshmi/presentation/Join_schemes/screens/customer_details_screen.dart';
 import '../controller/scheme_controller.dart';
 
 class JoinNowScreens extends StatelessWidget {
@@ -229,10 +230,10 @@ class JoinNowScreens extends StatelessWidget {
                                         elevation: 6,
                                       ),
                                       onPressed: () {
-                                        // TODO: Navigate to scheme details
+                                        Get.to(CustomerDetailsScreen());
                                       },
                                       child: const Text(
-                                        "View Details",
+                                        "Join Now",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           letterSpacing: 0.8,
