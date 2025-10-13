@@ -20,10 +20,11 @@ class HomeController extends GetxController {
       isLoading.value = true;
 
       final body = jsonEncode({"UPDATETYPE": ""});
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse(ApiUrl.rateMastUpdate),
 
         headers: {"Content-Type": "application/json"},
+        body: body
       );
 
       if (response.statusCode == 200) {

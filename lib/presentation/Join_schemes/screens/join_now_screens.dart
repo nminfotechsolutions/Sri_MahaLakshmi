@@ -230,7 +230,10 @@ class JoinNowScreens extends StatelessWidget {
                                         elevation: 6,
                                       ),
                                       onPressed: () {
-                                        Get.to(CustomerDetailsScreen());
+                                        print(scheme.toJson());
+                                       // Get.to(CustomerDetailsScreen());
+                                        Get.to(() => CustomerDetailsScreen(), arguments: scheme);
+
                                       },
                                       child: const Text(
                                         "Join Now",

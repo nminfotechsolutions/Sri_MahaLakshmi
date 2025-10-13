@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/api/api_url.dart';
 import 'package:sri_mahalakshmi/core/utility/app_logger.dart';
 import 'package:sri_mahalakshmi/core/utility/snack_bar.dart';
+import 'package:sri_mahalakshmi/presentation/Authentication/models/customer_response.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/models/register_response.dart';
+import 'package:sri_mahalakshmi/presentation/Authentication/screens/otp_screen.dart';
 import 'dart:convert';
 
 import 'package:sri_mahalakshmi/presentation/Home/Screens/home_screen.dart';
@@ -17,6 +20,7 @@ class LoginController extends GetxController {
   var isLoading = false.obs; // <--- make it observable
   var user = Rxn<RegisterResponse>(); // nullable reactive UserModel
   var errorMessage = ''.obs;
+
   Future<void> checkMobile(String mobileNo) async {
     try {
       isLoading.value = true;
@@ -35,13 +39,14 @@ class LoginController extends GetxController {
           CustomSnackBar.showError("User not found. Please register first.");
           Get.off(() => RegisterScreen(mobileNumber: mobileNo));
           // CustomSnackBar.showSuccess("User found. Please enter password.");
-        } */else {
-
+        } */ else {
           // errorMessage.value = data['message'] ?? 'Unexpected response';
         }
       } else {
-        CustomSnackBar.showError("User not found. Please register first.");
-        Get.off(() => RegisterScreen(mobileNumber: mobileNo));
+        otpSend(mobileNo: mobileNo);
+        isPasswordEnabled.value = false;
+
+        // Get.off(() => RegisterScreen(mobileNumber: mobileNo));
         // errorMessage.value = 'Server error: ${response.statusCode}';
       }
     } catch (e) {
@@ -102,6 +107,18 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200 && data['success'] == 200) {
         print(data.toString());
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        final customerJsonList = data['data'];
+        if (customerJsonList != null &&
+            customerJsonList is List &&
+            customerJsonList.isNotEmpty) {
+          final customer = CustomerResponse.fromJson(customerJsonList[0]);
+          AppLogger.log.i('Shared Prefs Data $customer');
+          await prefs.setString('userData', CustomerResponse.encode(customer));
+        } else {
+          throw Exception("No customer data found in response.");
+        }
         print(response.body);
         Get.to(HomeScreen());
         print(data['message']);
@@ -143,11 +160,23 @@ class LoginController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+
+        final customerJsonList = data['data'];
+        if (customerJsonList != null &&
+            customerJsonList is List &&
+            customerJsonList.isNotEmpty) {
+          final customer = CustomerResponse.fromJson(customerJsonList[0]);
+          AppLogger.log.i('Shared Prefs Data ${customer.toJson()}');
+          await prefs.setString('userData', CustomerResponse.encode(customer));
+        } else {
+          throw Exception("No customer data found in response.");
+        }
+
         print(data.toString());
-        print(response.body);
+
         Get.to(HomeScreen());
-        print(data['message']);
-        // successMessage.value = data['message'] ?? 'Registered successfully';
       } else {
         print('Login Failed');
         CustomSnackBar.showError('Login Failed');
@@ -161,32 +190,86 @@ class LoginController extends GetxController {
     }
   }
 
-  // Future<void> fetchUser(String email) async {
-  //   try {
-  //     isLoading.value = true;
-  //     errorMessage.value = '';
-  //
-  //     // Replace with your real API URL
-  //     final url = Uri.parse('https://your-api-url.com/login?email=$email');
-  //     final response = await http.get(url);
-  //
-  //     if (response.statusCode == 200) {
-  //       final jsonData = jsonDecode(response.body);
-  //
-  //       if (jsonData['success'] == 200 && jsonData['data'] != null) {
-  //         user.value = RegisterResponse.fromJson(jsonData['data'][0]);
-  //       } else {
-  //         errorMessage.value = jsonData['message'] ?? 'No user found';
-  //       }
-  //     } else {
-  //       errorMessage.value = 'Server error: ${response.statusCode}';
-  //     }
-  //   } catch (e) {
-  //     errorMessage.value = 'Error: $e';
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
+  Future<void> otpSend({required String mobileNo}) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      // successMessage.value = '';
+
+      final url = Uri.parse(ApiUrl.otpSend);
+
+      // Prepare JSON body
+      final body = jsonEncode({"MOBILENO": mobileNo});
+      AppLogger.log.i(body);
+
+      // Send POST request
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == 200) {
+        Get.to(OtpScreen(mobileNumber: mobileNo));
+        CustomSnackBar.showSuccess('Otp sent successfully');
+        print(data.toString());
+
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setBool('isLoggedIn', true);
+      } else {
+        print('Otp  Failed');
+        CustomSnackBar.showError('Otp Failed');
+      }
+    } catch (e) {
+      print(e);
+      errorMessage.value = 'Error: $e';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> otpVerify({
+    required String mobileNo,
+    required String otp,
+  }) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+      // successMessage.value = '';
+
+      final url = Uri.parse(ApiUrl.otpVerify);
+
+      // Prepare JSON body
+      final body = jsonEncode({"MOBILENO": mobileNo, "OTP": otp});
+      AppLogger.log.i(body);
+
+      // Send POST request
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == 200) {
+        Get.offAll(RegisterScreen(mobileNumber: mobileNo));
+
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setBool('isLoggedIn', true);
+      } else {
+        print('Otp  Failed');
+        CustomSnackBar.showError('Otp Failed');
+      }
+    } catch (e) {
+      print(e);
+      errorMessage.value = 'Error: $e';
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
   void logout() {
     user.value = null;

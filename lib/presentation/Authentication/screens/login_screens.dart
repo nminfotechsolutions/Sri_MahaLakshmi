@@ -13,6 +13,8 @@ import '../../../core/utility/snack_bar.dart';
 import '../../../core/widgets/animated_navigation.dart';
 import 'package:get/get.dart';
 
+import 'mpin_screen.dart';
+
 class LoginScreens extends StatefulWidget {
   const LoginScreens({super.key});
 
@@ -24,6 +26,8 @@ class _LoginScreensState extends State<LoginScreens> {
   final LoginController controller = Get.put(LoginController());
   final TextEditingController mobileNumber = TextEditingController();
   final TextEditingController password = TextEditingController();
+
+  // "MOBILENO":"8667382195"
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,9 +334,20 @@ class _LoginScreensState extends State<LoginScreens> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
+                                        // AnimatedNavigation.navigateWithAnimation(
+                                        //   context,
+                                        //   const RegisterScreen(),
+                                        // );
                                         AnimatedNavigation.navigateWithAnimation(
                                           context,
-                                          const RegisterScreen(),
+                                          MpinScreen(
+                                            pinLength: 4,
+                                            onCompleted: (pin) {
+                                              // Demo behaviour: check pin and show result
+                                              // In production, verify securely on the server or via secure enclave
+                                              print('Entered MPIN: $pin');
+                                            },
+                                          ),
                                         );
                                       },
                                   ),

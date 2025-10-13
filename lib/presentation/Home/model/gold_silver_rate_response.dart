@@ -37,8 +37,8 @@ class GoldSilverData {
   GoldSilverData({required this.gold, required this.silver});
 
   factory GoldSilverData.fromJson(Map<String, dynamic> json) {
-    return GoldSilverData(gold: json['GOLD'], silver: json['silver']);
+    return GoldSilverData(gold: json['GOLD']?? 0, silver: json['SILVER']?? 0);
   }
 
-  Map<String, dynamic> toJson() => {'gold': gold, 'silver': silver};
+  Map<String, dynamic> toJson() => {'GOLD': gold, 'SILVER': silver};
 }

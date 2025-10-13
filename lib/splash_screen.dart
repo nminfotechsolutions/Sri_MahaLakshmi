@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/screens/login_screens.dart';
@@ -8,7 +9,7 @@ import 'dart:async';
 import 'package:sri_mahalakshmi/presentation/Home/Screens/home_screen.dart';
 
 import 'core/utility/app_colors.dart';
-
+import 'package:get/get.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -21,6 +22,18 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
+  Future<void> _checkLoginStatus() async {
+    await Future.delayed(Duration(seconds: 2)); // Simulate loading time
+
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      Get.offAll(() => HomeScreen());
+    } else {
+      Get.offAll(() => LoginScreens());
+    }
+  }
 
   @override
   void initState() {
@@ -45,10 +58,8 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Timer(Duration(seconds: 6), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => LoginScreens()),
-      );
+      Get.offAll(() => LoginScreens());
+     // _checkLoginStatus();
     });
   }
 
