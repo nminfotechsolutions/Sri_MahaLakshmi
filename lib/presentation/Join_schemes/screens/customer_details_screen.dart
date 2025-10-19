@@ -5,12 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_logger.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/models/customer_response.dart';
 import 'package:sri_mahalakshmi/presentation/Join_schemes/screens/scheme_summary_screen.dart';
+import 'package:sri_mahalakshmi/presentation/my_schemes/model/my_scheme_response.dart';
 import '../../../core/utility/app_textstyles.dart';
 import '../../../core/widgets/animated_buttons.dart';
 import '../model/scheme_type_response.dart';
 
 class CustomerDetailsScreen extends StatefulWidget {
-  const CustomerDetailsScreen({super.key});
+  final String? page;
+  const CustomerDetailsScreen({super.key, this.page});
 
   @override
   State<CustomerDetailsScreen> createState() => _CustomerDetailsScreenState();
@@ -18,6 +20,7 @@ class CustomerDetailsScreen extends StatefulWidget {
 
 class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   late final SchemeData scheme;
+  late final MySchemeData mySchemeData;
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final stateController = TextEditingController();
@@ -28,11 +31,18 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   final panController = TextEditingController();
 
   @override
+  @override
   void initState() {
     super.initState();
-   scheme = Get.arguments as SchemeData;
 
-   AppLogger.log.i("🟢 Received scheme: ${scheme.toJson()}");
+    if (widget.page == 'MyPlan') {
+      mySchemeData = Get.arguments as MySchemeData;
+      AppLogger.log.i("🟢 Received MySchemeData: ${mySchemeData.toJson()}");
+    } else {
+      scheme = Get.arguments as SchemeData;
+      AppLogger.log.i("🟢 Received SchemeData: ${scheme.toJson()}");
+    }
+
     _loadUserData();
   }
 
@@ -72,7 +82,6 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
       AppLogger.log.e("No user data found in SharedPreferences.");
     }
   }
-
 
   @override
   void dispose() {
@@ -185,9 +194,11 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
           child: AnimatedButton(
             text: 'Submit',
             onPressed: () {
-              // ✅ You can now access edited data
               final updatedData = {
-                'scheme': scheme.toJson(), // your SchemeData converted to Map
+                'scheme': widget.page == 'MyPlan'
+                    ? mySchemeData.toJson()
+                    : scheme.toJson(),
+
                 'FullName': nameController.text,
                 'Address': addressController.text,
                 'State': stateController.text,
@@ -200,16 +211,17 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
               AppLogger.log.i(updatedData);
 
               Get.to(
-                    () =>   SchemeSummaryScreen(
-                        fullName : nameController.text,
-                      address : addressController.text,
-                      state    : stateController.text,
-                      country  : countryController.text,
-                      pinCode : pincodeController.text,
-                      mobile : mobileController.text,
-                      aadhar : aadharController.text,
-                      pAN     : panController.text,
-                    ),
+                () => SchemeSummaryScreen(
+                  page: widget.page.toString()?? '',
+                  fullName: nameController.text,
+                  address: addressController.text,
+                  state: stateController.text,
+                  country: countryController.text,
+                  pinCode: pincodeController.text,
+                  mobile: mobileController.text,
+                  aadhar: aadharController.text,
+                  pAN: panController.text,
+                ),
                 arguments: updatedData,
               );
             },

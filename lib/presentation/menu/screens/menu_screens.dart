@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
+import 'package:sri_mahalakshmi/presentation/Authentication/screens/login_screens.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:get/get.dart';
 import '../../../core/utility/app_colors.dart';
 import '../../../core/utility/app_images.dart';
 import 'kyc_screens.dart';
@@ -116,15 +118,109 @@ class _MenuScreensState extends State<MenuScreens> {
                 ),
               ),
 
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppTextStyles.textWith600(
-                    text: 'Our Shop Location',
-                    fontSize: 18,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppTextStyles.textWith600(
+                        text: 'Our Shop Location',
+                        fontSize: 18,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          // Show confirmation dialog
+                          Get.defaultDialog(
+                            title: 'Logout',
+                            titleStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent,
+                            ),
+                            middleText: 'Are you sure you want to log out?',
+                            middleTextStyle: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                            backgroundColor: Colors.white,
+                            radius: 20,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 16,
+                            ),
+                            barrierDismissible: true,
+                            cancel: OutlinedButton.icon(
+                              onPressed: () {
+                                Get.back(); // Close dialog
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.redAccent,
+                              ),
+                              label: const Text(
+                                'Cancel',
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.redAccent),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 20,
+                                ),
+                              ),
+                            ),
+                            confirm: ElevatedButton.icon(
+                              onPressed: () async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.clear();
+                                Get.offAll(LoginScreens()); // Navigate to login
+                              },
+                              icon: const Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                              ),
+                              label: const Text(
+                                'Log Out',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 20,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppTextStyles.textWith600(
+                              text: 'Log Out',
+                              fontSize: 18,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(width: 8),
+                            Icon(
+                              Icons.logout,
+                              color: Colors.red,
+                            ), // Logout icon
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10),
+
+                  SizedBox(height: 15),
 
                   GestureDetector(
                     onTap: () {

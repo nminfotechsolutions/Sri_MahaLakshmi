@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_colors.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/presentation/Home/controller/home_controller.dart';
 import 'package:sri_mahalakshmi/presentation/menu/screens/menu_screens.dart';
 
 import '../../../core/utility/app_textstyles.dart';
+import '../../Authentication/models/customer_response.dart';
 import '../../Join_schemes/screens/join_now_screens.dart';
+import '../../my_schemes/screens/my_plan_screens.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +25,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final HomeController controller = Get.put(HomeController());
   bool isButtonPressed = false;
+  String userName = '';
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userDataString = prefs.getString('userData');
+
+    if (userDataString != null) {
+      try {
+        final customerJson = jsonDecode(userDataString);
+        final customer = CustomerResponse.fromJson(customerJson);
+        setState(() {
+          userName = '${customer.firstName ?? ''} ${customer.lastName ?? ''}';
+        });
+      } catch (e) {
+        print('Error decoding customer data: $e');
+      }
+    }
+  }
+
   void buttonPressed() {
     setState(() {
       if (isButtonPressed == false) {
@@ -30,8 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void initSate() {
+  @override
+  void initState() {
     super.initState();
+    _loadUserName();
     controller.fetchTodayRate();
   }
 
@@ -85,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   AppTextStyles.googleFontIbmPlex(
                                     fontSize: 17,
-                                    tittle: 'Vignesh Kumar',
+                                    tittle: userName,
                                   ),
                                 ],
                               ),
@@ -442,6 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                               onTap: () {
                                 Get.to(JoinNowScreens());
+
                                 print("Join Now clicked!");
                               },
                               child: Row(
@@ -468,6 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Color(0xFF4B79FF),
                               ],
                               onTap: () {
+                                Get.to(MyPlanScreens());
                                 print("My Plan clicked!");
                               },
                               child: Row(

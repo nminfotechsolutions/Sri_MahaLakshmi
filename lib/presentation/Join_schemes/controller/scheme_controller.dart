@@ -39,6 +39,7 @@ class SchemeController extends GetxController {
     required String schemeAmount,
     required String regNo,
     required String name,
+    required String accNo,
     required String address1,
     String? address2,
     required String city,
@@ -51,6 +52,7 @@ class SchemeController extends GetxController {
     required int chitId,
     required int goldRate,
     required int silverRate,
+
   }) async {
     try {
       isLoading.value = true;
@@ -79,7 +81,7 @@ class SchemeController extends GetxController {
         "CARD": 0,
         "CARDNAME": "",
         "EMPLOYEEID": "1",
-        "ACCNO": "",
+        "ACCNO": accNo,
         "GOLDRATE": goldRate,
         "SILVERRATE": silverRate,
         "REMARKS": "",
@@ -103,8 +105,8 @@ class SchemeController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == 200) {
-        print(data.toString());
-        print(response.body);
+
+        AppLogger.log.i(response.body.toString());
 
         print(data['message']);
         // successMessage.value = data['message'] ?? 'Registered successfully';

@@ -57,9 +57,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Timer(Duration(seconds: 6), () {
-      Get.offAll(() => LoginScreens());
-     // _checkLoginStatus();
+    Timer(Duration(seconds: 4), () {
+      // Get.offAll(() => LoginScreens());
+      _checkLoginStatus();
     });
   }
 

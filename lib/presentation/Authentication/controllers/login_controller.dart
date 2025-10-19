@@ -116,6 +116,7 @@ class LoginController extends GetxController {
           final customer = CustomerResponse.fromJson(customerJsonList[0]);
           AppLogger.log.i('Shared Prefs Data $customer');
           await prefs.setString('userData', CustomerResponse.encode(customer));
+
         } else {
           throw Exception("No customer data found in response.");
         }

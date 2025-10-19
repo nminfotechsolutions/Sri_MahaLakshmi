@@ -334,21 +334,21 @@ class _LoginScreensState extends State<LoginScreens> {
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        // AnimatedNavigation.navigateWithAnimation(
-                                        //   context,
-                                        //   const RegisterScreen(),
-                                        // );
                                         AnimatedNavigation.navigateWithAnimation(
                                           context,
-                                          MpinScreen(
-                                            pinLength: 4,
-                                            onCompleted: (pin) {
-                                              // Demo behaviour: check pin and show result
-                                              // In production, verify securely on the server or via secure enclave
-                                              print('Entered MPIN: $pin');
-                                            },
-                                          ),
+                                          const RegisterScreen(),
                                         );
+                                        // AnimatedNavigation.navigateWithAnimation(
+                                        //   context,
+                                        //   MpinScreen(
+                                        //     pinLength: 4,
+                                        //     onCompleted: (pin) {
+                                        //       // Demo behaviour: check pin and show result
+                                        //       // In production, verify securely on the server or via secure enclave
+                                        //       print('Entered MPIN: $pin');
+                                        //     },
+                                        //   ),
+                                        // );
                                       },
                                   ),
                                 ],
