@@ -10,6 +10,7 @@ import 'package:sri_mahalakshmi/presentation/Home/Screens/home_screen.dart';
 
 import 'core/utility/app_colors.dart';
 import 'package:get/get.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -76,8 +77,8 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color(0xFFffaf4f2), // Soft beach white
-              const Color(0xFFffaf4f2), // Soft beach white
+              const Color(0xFFffaf4f2),
+              const Color(0xFFffaf4f2),
               const Color(0xFFffaf4f2),
             ],
             begin: Alignment.topLeft,
@@ -89,13 +90,58 @@ class _SplashScreenState extends State<SplashScreen>
             opacity: _fadeAnimation,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(AppImages.log_2, width: 170),
-                  SizedBox(height: 20),
-                  AppTextStyles.googleFontIbmPlex(tittle: 'ஸ்ரீ மகாலெக்ஷ்மி'),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.9),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.brown.withOpacity(0.2),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        AppImages.log_2,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'ஸ்ரீ மகாலக்ஷ்மி நகை மாளிகை',
+                      style: GoogleFonts.tiroTamil(
+                        textStyle: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6D4C41), // Elegant brown tone
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 35),
+
+                    Text(
+                      'அழகும் நம்பிக்கையும் ஒன்றாகும் இடம்',
+                      style: GoogleFonts.tiroTamil(
+                        textStyle: const TextStyle(
+                          fontSize: 15,
+                          color: Color(0xFF8D6E63),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

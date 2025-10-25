@@ -10,6 +10,7 @@ import 'package:sri_mahalakshmi/presentation/Join_schemes/model/scheme_type_resp
 import 'package:sri_mahalakshmi/presentation/my_schemes/model/my_scheme_response.dart';
 import '../../../core/widgets/animated_buttons.dart';
 import '../../../core/utility/app_textstyles.dart';
+import '../../Home/Screens/home_screen.dart';
 import '../../Home/controller/home_controller.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -24,6 +25,7 @@ class SchemeSummaryScreen extends StatefulWidget {
   final String aadhar;
   final String pAN;
   final String page;
+  final double? enteredAmount;
 
   const SchemeSummaryScreen({
     super.key,
@@ -36,6 +38,7 @@ class SchemeSummaryScreen extends StatefulWidget {
     required this.aadhar,
     required this.pAN,
     required this.page,
+    this.enteredAmount,
   });
 
   @override
@@ -62,7 +65,9 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
         ? MySchemeData.fromJson(schemeJson)
         : SchemeData.fromJson(schemeJson);
 
-    controller.fetchTodayRate();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchTodayRate();
+    });
 
     _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -151,6 +156,7 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
   // Razorpay Callbacks
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     print('Payment Success: ${response.paymentId}');
+
     // Call your API after successful payment
     final goldRate = controller.goldAndSilverRateData.first.gold;
     final silverRate = controller.goldAndSilverRateData.first.silver;
@@ -175,6 +181,19 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
       goldRate: goldRate,
       silverRate: silverRate,
     );
+
+    // Show success snackbar
+    Get.snackbar(
+      "Success",
+      "Payment successful! ID: ${response.paymentId}",
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 3),
+    );
+
+    // Navigate to Home screen and remove all previous screens
+    Get.offAll(() => HomeScreen());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -188,6 +207,10 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double amountToShow =
+        (widget.enteredAmount != null && widget.enteredAmount! > 0)
+        ? widget.enteredAmount!
+        : schemeAmount.toDouble(); // ensure double
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -277,7 +300,7 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      "₹$schemeAmount/month",
+                                      "₹${amountToShow.toStringAsFixed(2)}/month", // converts to string properly
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
@@ -436,15 +459,17 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
           ),
         ),
       ),
-
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
           child: AnimatedButton(
             text: 'Join New Scheme',
             onPressed: () {
-              double amount = schemeAmount.toDouble();
-              _openRazorpayCheckout(amount);
+              double amountToPay =
+                  (widget.enteredAmount != null && widget.enteredAmount! > 0)
+                  ? widget.enteredAmount!
+                  : schemeAmount.toDouble();
+              _openRazorpayCheckout(amountToPay);
             },
           ),
         ),

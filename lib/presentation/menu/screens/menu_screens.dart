@@ -4,6 +4,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/screens/login_screens.dart';
+import 'package:sri_mahalakshmi/presentation/Join_schemes/screens/join_now_screens.dart';
+import 'package:sri_mahalakshmi/presentation/my_schemes/screens/my_plan_screens.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import '../../../core/utility/app_colors.dart';
@@ -18,7 +20,14 @@ class MenuScreens extends StatefulWidget {
 }
 
 class _MenuScreensState extends State<MenuScreens> {
-  @override
+  final List<String> menuItems = [
+    'Join Now',
+    'My Savings',
+    // 'Kyc',
+    'Transaction History',
+    'My Profile',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,58 +71,128 @@ class _MenuScreensState extends State<MenuScreens> {
               // SCROLLABLE MENU ITEMS
               Expanded(
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
-                    children: [
-                      ...[
-                        'Join Now',
-                        'My Savings',
-                        'Kyc',
-                        'Transaction History',
-                        'My Profile',
-                      ].map((title) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: InkWell(
-                            onTap: () {
-                              if (title == 'Kyc') {
-                                // Navigate to KYC Screen
+                    children: List.generate(menuItems.length, (index) {
+                      final title = menuItems[index];
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: InkWell(
+                          onTap: () {
+                            switch (index) {
+                              case 0:
+                                // Navigate to Join Now
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => KycScreen(),
+                                    builder: (context) => JoinNowScreens(),
                                   ),
                                 );
-                              } else {
-                                // Handle other menu items
-                                print('Tapped: $title');
-                              }
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColor.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 2,
-                                    offset: Offset(0, 1),
+                                break;
+                              case 1:
+                                // Navigate to My Savings
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MyPlanScreens(),
                                   ),
-                                ],
-                              ),
-                              child: ListTile(
-                                title: AppTextStyles.textWith600(
-                                  text: title,
-                                  fontSize: 20,
-                                  color: AppColor.lightBlack,
+                                );
+                                break;
+                              // case 2:
+                              //   // Navigate to KYC
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => KycScreen(),
+                              //     ),
+                              //   );
+                              //   break;
+                              case 2:
+                                Get.defaultDialog(
+                                  title: "Coming Soon",
+                                  middleText:
+                                      "This feature is under development.",
+                                  backgroundColor: Colors.white,
+                                  titleStyle: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                  middleTextStyle: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                  radius: 12,
+                                  confirm: ElevatedButton(
+                                    onPressed: () => Get.back(),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.amber,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text("OK"),
+                                  ),
+                                );
+                                break;
+                              case 3:
+                                Get.defaultDialog(
+                                  title: "Coming Soon",
+                                  middleText:
+                                      "This feature is under development.",
+                                  backgroundColor: Colors.white,
+                                  titleStyle: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber,
+                                  ),
+                                  middleTextStyle: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                  radius: 12,
+                                  confirm: ElevatedButton(
+                                    onPressed: () => Get.back(),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.amber,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text("OK"),
+                                  ),
+                                );
+                                break;
+
+                              default:
+                                print('Tapped: $title');
+                            }
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColor.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 1),
                                 ),
-                                trailing: Icon(Icons.chevron_right),
+                              ],
+                            ),
+                            child: ListTile(
+                              title: AppTextStyles.textWith600(
+                                text: title,
+                                fontSize: 20,
+                                color: AppColor.lightBlack,
                               ),
+                              trailing: const Icon(Icons.chevron_right),
                             ),
                           ),
-                        );
-                      }).toList(),
-                    ],
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -224,7 +303,7 @@ class _MenuScreensState extends State<MenuScreens> {
 
                   GestureDetector(
                     onTap: () {
-                      _openMap(9.931457602796653, 78.1100249845084);
+                      _openMap(9.917626440743089, 78.12110965168824);
                     },
                     child: Container(
                       height: 120,
@@ -255,7 +334,10 @@ class _MenuScreensState extends State<MenuScreens> {
                                 ),
                                 initialZoom: 14,
                                 onTap: (tapPosition, point) {
-                                  _openMap(9.931457602796653, 78.1100249845084);
+                                  _openMap(
+                                    9.917626440743089,
+                                    78.12110965168824,
+                                  );
                                 },
                               ),
                               children: [
@@ -306,7 +388,7 @@ class _MenuScreensState extends State<MenuScreens> {
                                     ),
                                     SizedBox(width: 5),
                                     Text(
-                                      "NM Infotech Solutions",
+                                      "Sri Mahalaksmi nagai maaligai",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
