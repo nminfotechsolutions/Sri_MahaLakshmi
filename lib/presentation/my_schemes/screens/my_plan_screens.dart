@@ -252,7 +252,7 @@ class _MyPlanScreensState extends State<MyPlanScreens> {
                                           color: Colors.green, size: 18),
                                       const SizedBox(width: 4),
                                       Text(
-                                        data.schemeAmount.toString(),
+                                        data.totalCollection.toString(),
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,

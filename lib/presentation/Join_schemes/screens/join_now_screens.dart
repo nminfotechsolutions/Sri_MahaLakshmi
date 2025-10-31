@@ -10,6 +10,7 @@ import '../controller/scheme_controller.dart';
 
 class JoinNowScreens extends StatelessWidget {
   final SchemeController controller = Get.put(SchemeController());
+
   final HomeController homeController = Get.put(HomeController());
 
   @override
@@ -390,7 +391,7 @@ class JoinNowScreens extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "₹${goldRate.toStringAsFixed(2)}/g",
+                    "₹${goldRate.toStringAsFixed(3)}/g",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

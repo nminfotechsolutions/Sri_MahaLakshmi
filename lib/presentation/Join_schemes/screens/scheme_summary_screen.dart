@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:sri_mahalakshmi/core/utility/app_colors.dart';
 import 'package:sri_mahalakshmi/core/utility/app_images.dart';
+import 'package:sri_mahalakshmi/core/utility/snack_bar.dart';
 import 'package:sri_mahalakshmi/presentation/Join_schemes/controller/scheme_controller.dart';
 import 'package:sri_mahalakshmi/presentation/Join_schemes/model/scheme_type_response.dart';
 import 'package:sri_mahalakshmi/presentation/my_schemes/model/my_scheme_response.dart';
@@ -25,6 +26,7 @@ class SchemeSummaryScreen extends StatefulWidget {
   final String aadhar;
   final String pAN;
   final String page;
+  final String city;
   final double? enteredAmount;
 
   const SchemeSummaryScreen({
@@ -37,6 +39,7 @@ class SchemeSummaryScreen extends StatefulWidget {
     required this.mobile,
     required this.aadhar,
     required this.pAN,
+    required this.city,
     required this.page,
     this.enteredAmount,
   });
@@ -48,9 +51,11 @@ class SchemeSummaryScreen extends StatefulWidget {
 class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
   final HomeController controller = Get.put(HomeController());
   final SchemeController schemeController = Get.put(SchemeController());
-
+  bool _termsAccepted = false;
   final today = DateFormat('dd MMM yyyy').format(DateTime.now());
-
+  String? transactionId;
+  String? orderId;
+  String? status;
   late final Object scheme;
   late Razorpay _razorpay;
 
@@ -107,8 +112,8 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
   // Razorpay order creation
   Future<String> _createRazorpayOrder(double amount) async {
     final url = Uri.parse('https://api.razorpay.com/v1/orders');
-    const apiKey = 'rzp_live_RJnEb064whmCZZ';
-    const apiSecret = 'yvv0xU0n6qeIOC7KnddLArUH';
+    const apiKey = 'rzp_live_RYOo6If52ZEkqz';
+    const apiSecret = 'zvgE806J0HZva9tl0csZBT28';
 
     final headers = {
       'Authorization':
@@ -135,7 +140,7 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
     try {
       final orderId = await _createRazorpayOrder(amount);
       var options = {
-        'key': 'rzp_live_RJnEb064whmCZZ',
+        'key': 'rzp_live_RYOo6If52ZEkqz',
         'amount': (amount * 100).toInt(),
         'name': widget.fullName,
         'description': 'Gold Chits',
@@ -146,6 +151,7 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
           'wallets': ['paytm'],
         },
       };
+
       _razorpay.open(options);
     } catch (e) {
       print('Error opening Razorpay: $e');
@@ -156,21 +162,31 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
   // Razorpay Callbacks
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     print('Payment Success: ${response.paymentId}');
-
+    transactionId =
+        response.paymentId ?? response.data?["razorpay_payment_id"] ?? "";
+    orderId = response.orderId;
+    status = "Success";
     // Call your API after successful payment
     final goldRate = controller.goldAndSilverRateData.first.gold;
     final silverRate = controller.goldAndSilverRateData.first.silver;
-
+    double amountToPay =
+        (widget.enteredAmount != null && widget.enteredAmount! > 0)
+        ? widget.enteredAmount!
+        : schemeAmount.toDouble();
     schemeController.newSchemeJoin(
+      status: '',
+      transId: '',
       accNo: accNo ?? '',
       schemeName: schemeName,
       schemeId: '1',
       groupCode: '',
-      schemeAmount: schemeAmount.toString(),
-      regNo: regNo.toString() ?? '',
+      schemeAmount: amountToPay.toString(),
+      regNo: (regNo != null && regNo.toString().trim().isNotEmpty)
+          ? regNo.toString()
+          : '',
       name: widget.fullName,
       address1: widget.address.toString(),
-      city: '',
+      city: widget.city.toString(),
       state: widget.state,
       country: widget.country,
       pincode: widget.pinCode,
@@ -182,7 +198,6 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
       silverRate: silverRate,
     );
 
-    // Show success snackbar
     Get.snackbar(
       "Success",
       "Payment successful! ID: ${response.paymentId}",
@@ -192,13 +207,49 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
       duration: const Duration(seconds: 3),
     );
 
-    // Navigate to Home screen and remove all previous screens
     Get.offAll(() => HomeScreen());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print('Payment Failed: ${response.code} - ${response.message}');
-    Get.snackbar('Payment Failed', response.message ?? 'Error');
+    // final goldRate = controller.goldAndSilverRateData.first.gold;
+    // final silverRate = controller.goldAndSilverRateData.first.silver;
+    // double amountToPay =
+    //     (widget.enteredAmount != null && widget.enteredAmount! > 0)
+    //     ? widget.enteredAmount!
+    //     : schemeAmount.toDouble();
+    // transactionId = response.error.toString();
+    // status = "Error";
+    // schemeController.newSchemeJoin(
+    //   transId: transactionId.toString() ?? '',
+    //   status: status.toString(),
+    //   accNo: accNo ?? '',
+    //   schemeName: schemeName,
+    //   schemeId: '1',
+    //   groupCode: '',
+    //   schemeAmount: amountToPay.toString(),
+    //   regNo: (regNo != null && regNo.toString().trim().isNotEmpty)
+    //       ? regNo.toString()
+    //       : '',
+    //   name: widget.fullName,
+    //   address1: widget.address.toString(),
+    //   city: '',
+    //   state: widget.state,
+    //   country: widget.country,
+    //   pincode: widget.pinCode,
+    //   mobileNo: widget.mobile,
+    //   aadharNo: widget.aadhar,
+    //   panNo: widget.pAN,
+    //   chitId: chitId,
+    //   goldRate: goldRate,
+    //   silverRate: silverRate,
+    // );
+
+    // Get.snackbar('Payment Failed', response.message ?? 'Error');
+    CustomSnackBar.showError(
+      'Payment Failed',
+      title: response.message ?? 'Error',
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -452,7 +503,7 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Image.asset(AppImages.guarante),
               ],
             ),
@@ -460,18 +511,41 @@ class _SchemeSummaryScreenState extends State<SchemeSummaryScreen> {
         ),
       ),
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: AnimatedButton(
-            text: 'Join New Scheme',
-            onPressed: () {
-              double amountToPay =
-                  (widget.enteredAmount != null && widget.enteredAmount! > 0)
-                  ? widget.enteredAmount!
-                  : schemeAmount.toDouble();
-              _openRazorpayCheckout(amountToPay);
-            },
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+
+          children: [
+            CheckboxListTile(
+              title: Text("I agree to the terms and conditions"),
+              value: _termsAccepted,
+              onChanged: (bool? value) {
+                setState(() {
+                  _termsAccepted = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+              child: AnimatedButton(
+                text: 'Join New Scheme',
+                onPressed: () {
+                  if (!_termsAccepted) {
+                    CustomSnackBar.showError(
+                      'Please accept the terms and conditions before proceeding Below',
+                    );
+                    return; // stop execution
+                  }
+                  double amountToPay =
+                      (widget.enteredAmount != null &&
+                          widget.enteredAmount! > 0)
+                      ? widget.enteredAmount!
+                      : schemeAmount.toDouble();
+                  _openRazorpayCheckout(amountToPay);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

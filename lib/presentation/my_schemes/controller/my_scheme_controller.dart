@@ -53,13 +53,13 @@ class MySchemeController extends GetxController {
       final response = await http.get(
         Uri.parse(ApiUrl.mySchemeList(mobileNumber: mobileNumber)),
       );
-
+      AppLogger.log.i(ApiUrl.mySchemeList(mobileNumber: mobileNumber));
       if (response.statusCode == 200) {
         isLoading.value = false;
         final data = jsonDecode(response.body);
         final result = MySchemeResponse.fromJson(data);
         mySchemeList.assignAll(result.data);
-        AppLogger.log.i(result);
+        AppLogger.log.i(data);
       } else {
         isLoading.value = false;
         AppLogger.log.e("❌ API Error: ${response.body}");

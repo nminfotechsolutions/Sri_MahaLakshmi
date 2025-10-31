@@ -8,12 +8,16 @@ class ApiUrl {
   static String rateMastUpdate = "$baseUrl/RateMastUpdate";
   static String schemeJoin = "$baseUrl/SchemeJoin";
 
+
   static String customerCheck({required String mobileNumber}) {
     return "$baseUrl/CustomerCheck?MOBILENO=$mobileNumber";
   }
-
   static String mySchemeList({required String mobileNumber}) {
     return "$baseUrl/SchemeJoinList?MOBILENO=$mobileNumber&ACCNO=";
+  }
+
+  static String transactionHistory({required String mobileNumber}) {
+    return "$baseUrl/scheme/trasaction?MOBILENO=$mobileNumber";
   }
 
   static String myLedger({

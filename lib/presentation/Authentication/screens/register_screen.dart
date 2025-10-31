@@ -7,6 +7,8 @@ import 'package:sri_mahalakshmi/core/utility/app_images.dart';
 import 'package:sri_mahalakshmi/core/widgets/animated_buttons.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/controllers/login_controller.dart';
 
+import '../../Home/Screens/home_screen.dart';
+
 class RegisterScreen extends StatefulWidget {
   final String? mobileNumber;
   const RegisterScreen({super.key, this.mobileNumber});
@@ -249,42 +251,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 30),
 
                     // Error message & Register Button
-                    Obx(() {
-                      return Column(
-                        children: [
-                          if (controller.errorMessage.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: Text(
-                                controller.errorMessage.value,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          AnimatedButton(
-                            text: 'Register',
-                            isLoading: controller.isLoading,
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                controller.registerUser(
-                                  fName: fNameController.text.trim(),
-                                  lName: lNameController.text.trim(),
-                                  email: emailController.text.trim(),
-                                  mobileNo: mobileController.text.trim(),
-                                  aadhar: aadharController.text.trim(),
-                                  pan: panController.text.trim(),
-                                  address1: address1Controller.text.trim(),
-                                  city: cityController.text.trim(),
-                                  state: stateController.text.trim(),
-                                  country: countryController.text.trim(),
-                                  password: passwordController.text.trim(),
-                                  mpin: mpinController.text.trim(),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      );
-                    }),
+                    // Obx(() {
+                    //   return Column(
+                    //     children: [
+                    //       if (controller.errorMessage.isNotEmpty)
+                    //         Padding(
+                    //           padding: const EdgeInsets.only(bottom: 10),
+                    //           child: Text(
+                    //             // controller.errorMessage.value,'',
+                    //             '',
+                    //             style: const TextStyle(color: Colors.red),
+                    //           ),
+                    //         ),
+                    //
+                    //     ],
+                    //   );
+                    // }),
+                    AnimatedButton(
+                      text: 'Register',
+                      isLoading: controller.isLoading,
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          final success = await controller.registerUser(
+                            fName: fNameController.text.trim(),
+                            lName: lNameController.text.trim(),
+                            email: emailController.text.trim(),
+                            mobileNo: mobileController.text.trim(),
+                            aadhar: aadharController.text.trim(),
+                            pan: panController.text.trim(),
+                            address1: address1Controller.text.trim(),
+                            city: cityController.text.trim(),
+                            state: stateController.text.trim(),
+                            country: countryController.text.trim(),
+                            password: passwordController.text.trim(),
+                            mpin: mpinController.text.trim(),
+                          );
+                          if (success) {
+                            // ✅ Navigate only when registration succeeds
+                            Get.offAll(() => HomeScreen());
+                          } else {
+                            // ❌ Show error message from controller
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(controller.errorMessage.value)),
+                            );
+                          }
+                        }
+                      },
+                    ),
                     const SizedBox(height: 30),
 
                     // Sign In Link

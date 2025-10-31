@@ -1139,7 +1139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Text(
-                    "${weight.toStringAsFixed(2)} g",
+                    "${weight.toStringAsFixed(3)} g",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

@@ -48,11 +48,12 @@ class SchemeController extends GetxController {
     required String pincode,
     required String mobileNo,
     required String aadharNo,
+    required String status,
+    required String transId,
     required String panNo,
     required int chitId,
     required int goldRate,
     required int silverRate,
-
   }) async {
     try {
       isLoading.value = true;
@@ -78,7 +79,7 @@ class SchemeController extends GetxController {
         "PINCODE": pincode,
         "MOBILENO": mobileNo,
         "CASH": 0,
-        "CARD": 0,
+        "CARD": schemeAmount,
         "CARDNAME": "",
         "EMPLOYEEID": "1",
         "ACCNO": accNo,
@@ -90,8 +91,8 @@ class SchemeController extends GetxController {
         "PANNO": panNo,
         "CHITID": chitId,
         "METID": "",
-        "TRANS_ID": "Testing",
-        "STATUS": "Testing",
+        "TRANS_ID": transId,
+        "STATUS": status,
       });
 
       // Send POST request
@@ -105,7 +106,6 @@ class SchemeController extends GetxController {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 && data['success'] == 200) {
-
         AppLogger.log.i(response.body.toString());
 
         print(data['message']);

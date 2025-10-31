@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sri_mahalakshmi/core/utility/app_textstyles.dart';
 import 'package:sri_mahalakshmi/presentation/Authentication/screens/login_screens.dart';
 import 'package:sri_mahalakshmi/presentation/Join_schemes/screens/join_now_screens.dart';
+import 'package:sri_mahalakshmi/presentation/menu/screens/profile_screen.dart';
+import 'package:sri_mahalakshmi/presentation/menu/screens/transaction_history_screen.dart';
 import 'package:sri_mahalakshmi/presentation/my_schemes/screens/my_plan_screens.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
@@ -82,7 +84,7 @@ class _MenuScreensState extends State<MenuScreens> {
                           onTap: () {
                             switch (index) {
                               case 0:
-                                // Navigate to Join Now
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -109,58 +111,18 @@ class _MenuScreensState extends State<MenuScreens> {
                               //   );
                               //   break;
                               case 2:
-                                Get.defaultDialog(
-                                  title: "Coming Soon",
-                                  middleText:
-                                      "This feature is under development.",
-                                  backgroundColor: Colors.white,
-                                  titleStyle: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                  middleTextStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                  radius: 12,
-                                  confirm: ElevatedButton(
-                                    onPressed: () => Get.back(),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.amber,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text("OK"),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TransactionHistoryScreen(),
                                   ),
                                 );
                                 break;
                               case 3:
-                                Get.defaultDialog(
-                                  title: "Coming Soon",
-                                  middleText:
-                                      "This feature is under development.",
-                                  backgroundColor: Colors.white,
-                                  titleStyle: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.amber,
-                                  ),
-                                  middleTextStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                  radius: 12,
-                                  confirm: ElevatedButton(
-                                    onPressed: () => Get.back(),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.amber,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: const Text("OK"),
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(),
                                   ),
                                 );
                                 break;

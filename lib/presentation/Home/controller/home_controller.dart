@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:sri_mahalakshmi/core/utility/app_logger.dart';
 import '../model/gold_silver_rate_response.dart';
 
 import '../../../api/api_url.dart';
@@ -26,7 +27,8 @@ class HomeController extends GetxController {
         headers: {"Content-Type": "application/json"},
         body: body
       );
-
+AppLogger.log.i(ApiUrl.rateMastUpdate);
+AppLogger.log.i(body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 

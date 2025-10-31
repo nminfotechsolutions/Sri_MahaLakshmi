@@ -11,13 +11,14 @@ import 'dart:convert';
 
 import 'package:sri_mahalakshmi/presentation/Home/Screens/home_screen.dart';
 
+import '../../Join_schemes/screens/scheme_summary_screen.dart';
 import '../screens/register_screen.dart';
 
 class LoginController extends GetxController {
   // Observable variables
 
   var isPasswordEnabled = false.obs; // 🔹 controls password visibility
-  var isLoading = false.obs; // <--- make it observable
+  RxBool isLoading = false.obs; // <--- make it observable
   var user = Rxn<RegisterResponse>(); // nullable reactive UserModel
   var errorMessage = ''.obs;
 
@@ -56,6 +57,82 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<bool> registerUser({
+    required String fName,
+    required String lName,
+    required String email,
+    required String mobileNo,
+    required String aadhar,
+    required String pan,
+    required String address1,
+    String? address2,
+    required String city,
+    required String state,
+    required String country,
+    required String password,
+    required String mpin,
+    String? page,
+  }) async {
+    try {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      final url = Uri.parse(ApiUrl.customerSignUp);
+      final body = jsonEncode({
+        "FNAME": fName,
+        "LNAME": lName,
+        "EMAIL": email,
+        "MOBILENO": mobileNo,
+        "AADHAR": aadhar,
+        "PAN": pan,
+        "ADDRESS1": address1,
+        "ADDRESS2": address2 ?? '',
+        "CITY": city,
+        "STATE": state,
+        "COUNTRY": country,
+        "PASSWORD": password,
+        "MPIN": mpin,
+        "ACT": "Y",
+      });
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == 200) {
+        // Save user data
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        final customerJsonList = data['data'];
+
+        if (customerJsonList != null &&
+            customerJsonList is List &&
+            customerJsonList.isNotEmpty) {
+          final customer = CustomerResponse.fromJson(customerJsonList[0]);
+          await prefs.setString('userData', CustomerResponse.encode(customer));
+          AppLogger.log.i(response.body);
+          AppLogger.log.i(customer);
+        }
+
+        return true; // ✅ success
+      } else {
+        errorMessage.value = data['message'] ?? 'Registration failed';
+        AppLogger.log.e(data['message']);
+        return false;
+      }
+    } catch (e) {
+      errorMessage.value = 'Error: $e';
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /*
   Future<void> registerUser({
     required String fName,
     required String lName,
@@ -70,7 +147,9 @@ class LoginController extends GetxController {
     required String country,
     required String password,
     required String mpin,
-  }) async {
+    String? page,
+  }) async
+  {
     try {
       isLoading.value = true;
       errorMessage.value = '';
@@ -107,6 +186,8 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200 && data['success'] == 200) {
         print(data.toString());
+        AppLogger.log.i(data);
+        AppLogger.log.i(response.statusCode);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
         final customerJsonList = data['data'];
@@ -120,10 +201,22 @@ class LoginController extends GetxController {
           throw Exception("No customer data found in response.");
         }
         print(response.body);
-        Get.to(HomeScreen());
+        AppLogger.log.i(response.body);
+
+       // page != "profile" ? Get.to(HomeScreen()) : null;
+        if (page == "profile") {
+          // stay on same screen, do nothing
+        } else if (page == "CustomerDetails") {
+
+        } else {
+          Get.to(() => HomeScreen());
+        }
+
         print(data['message']);
         // successMessage.value = data['message'] ?? 'Registered successfully';
-      } else {
+      }
+
+      else {
         print('Login Failed');
         errorMessage.value = data['message'] ?? 'Registration failed';
       }
@@ -134,6 +227,7 @@ class LoginController extends GetxController {
       isLoading.value = false;
     }
   }
+*/
 
   Future<void> login({
     required String mobileNo,
