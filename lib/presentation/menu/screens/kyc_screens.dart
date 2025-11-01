@@ -216,6 +216,7 @@ class _KycScreenState extends State<KycScreen> {
                   text: 'Submit',
                   onPressed: () {
                     controller.registerUser(
+                      pinCode: '',
                       fName: name,
                       lName: name,
                       email: email,
@@ -240,10 +241,10 @@ class _KycScreenState extends State<KycScreen> {
   }
 
   Widget _buildTextField(
-    String label,
-    TextEditingController controller, {
-    TextInputType keyboardType = TextInputType.text,
-  }) {
+      String label,
+      TextEditingController controller, {
+        TextInputType keyboardType = TextInputType.text,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(

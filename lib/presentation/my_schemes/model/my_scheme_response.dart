@@ -1,4 +1,4 @@
-class  MySchemeResponse  {
+class MySchemeResponse {
   final int success;
   final String message;
   final List<MySchemeData> data;
@@ -13,7 +13,8 @@ class  MySchemeResponse  {
     return MySchemeResponse(
       success: json['success'] ?? 0,
       message: json['message'] ?? '',
-      data: (json['data'] as List<dynamic>?)
+      data:
+      (json['data'] as List<dynamic>?)
           ?.map((e) => MySchemeData.fromJson(e))
           .toList() ??
           [],
@@ -39,6 +40,7 @@ class MySchemeData {
   final String noIns;
   final DateTime doj;
   final String asPay;
+  final String METID;
   final DateTime maturityDate;
   final double totalCollection;
   final double metValue;
@@ -60,6 +62,7 @@ class MySchemeData {
     required this.schemeName,
     required this.type,
     required this.schemeAmount,
+    required this.METID,
     required this.intType,
     required this.noIns,
     required this.doj,
@@ -88,10 +91,12 @@ class MySchemeData {
       type: json['TYPE'] ?? '',
       schemeAmount: (json['SCHEMEAMOUNT'] ?? 0).toDouble(),
       intType: json['INTTYPE'] ?? '',
+      METID: json['METID'] ?? '',
       noIns: json['NOINS'] ?? '',
       doj: DateTime.tryParse(json['DOJ'] ?? '') ?? DateTime.now(),
       asPay: json['ASPAY'] ?? '',
-      maturityDate: DateTime.tryParse(json['MATURITYDATE'] ?? '') ?? DateTime.now(),
+      maturityDate:
+      DateTime.tryParse(json['MATURITYDATE'] ?? '') ?? DateTime.now(),
       totalCollection: (json['TOTAL_COLLECTION'] ?? 0).toDouble(),
       metValue: (json['MET_VALUE'] ?? 0).toDouble(),
       schemeId: json['SCHEMEID'] ?? 0,
@@ -115,6 +120,7 @@ class MySchemeData {
       'SCHEMENAME': schemeName,
       'TYPE': type,
       'SCHEMEAMOUNT': schemeAmount,
+      'METID': METID,
       'INTTYPE': intType,
       'NOINS': noIns,
       'DOJ': doj.toIso8601String(),

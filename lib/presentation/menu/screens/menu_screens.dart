@@ -93,7 +93,7 @@ class _MenuScreensState extends State<MenuScreens> {
                                 );
                                 break;
                               case 1:
-                                // Navigate to My Savings
+                              // Navigate to My Savings
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -101,15 +101,15 @@ class _MenuScreensState extends State<MenuScreens> {
                                   ),
                                 );
                                 break;
-                              // case 2:
-                              //   // Navigate to KYC
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => KycScreen(),
-                              //     ),
-                              //   );
-                              //   break;
+                            // case 2:
+                            //   // Navigate to KYC
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => KycScreen(),
+                            //     ),
+                            //   );
+                            //   break;
                               case 2:
                                 Navigator.push(
                                   context,
@@ -217,7 +217,7 @@ class _MenuScreensState extends State<MenuScreens> {
                             confirm: ElevatedButton.icon(
                               onPressed: () async {
                                 final prefs =
-                                    await SharedPreferences.getInstance();
+                                await SharedPreferences.getInstance();
                                 await prefs.clear();
                                 Get.offAll(LoginScreens()); // Navigate to login
                               },
@@ -305,9 +305,9 @@ class _MenuScreensState extends State<MenuScreens> {
                               children: [
                                 TileLayer(
                                   urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                   userAgentPackageName:
-                                      'com.example.sri_mahalakshmi',
+                                  'com.example.sri_mahalakshmi',
                                 ),
                                 MarkerLayer(
                                   markers: [

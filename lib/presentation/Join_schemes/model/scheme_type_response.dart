@@ -14,9 +14,9 @@ class SchemeTypeResponse {
       success: json['success'] ?? 0,
       message: json['message'] ?? '',
       data:
-          (json['data'] as List<dynamic>?)
-              ?.map((e) => SchemeData.fromJson(e))
-              .toList() ??
+      (json['data'] as List<dynamic>?)
+          ?.map((e) => SchemeData.fromJson(e))
+          .toList() ??
           [],
     );
   }
@@ -37,6 +37,8 @@ class SchemeData {
   final String noIns;
   final String schemeType;
   final String chitAmt;
+  final String SCHCODE;
+  final String METID;
 
   SchemeData({
     required this.schemeName,
@@ -45,6 +47,8 @@ class SchemeData {
     required this.noIns,
     required this.schemeType,
     required this.chitAmt,
+    required this.SCHCODE,
+    required this.METID,
   });
 
   factory SchemeData.fromJson(Map<String, dynamic> json) {
@@ -55,6 +59,8 @@ class SchemeData {
       noIns: json['NOINS'] ?? '',
       schemeType: json['SCHEMETYPE'] ?? '',
       chitAmt: json['CHITAMT'] ?? '',
+      SCHCODE: json['SCHCODE'] ?? '',
+      METID: json['METID'] ?? '',
     );
   }
 
@@ -66,6 +72,8 @@ class SchemeData {
       'NOINS': noIns,
       'SCHEMETYPE': schemeType,
       'CHITAMT': chitAmt,
+      'METID': METID,
+      'SCHCODE': SCHCODE,
     };
   }
 }

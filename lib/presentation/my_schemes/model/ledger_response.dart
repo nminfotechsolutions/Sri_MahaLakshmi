@@ -30,6 +30,7 @@ class LedgerData {
   final num metValue;
   final String? transId;
   final String? metId;
+  final String? TYPE;
   final num? goldRate;
 
   LedgerData({
@@ -42,6 +43,7 @@ class LedgerData {
     required this.metValue,
     this.transId,
     this.metId,
+    this.TYPE,
     this.goldRate,
   });
 
@@ -58,6 +60,7 @@ class LedgerData {
       metValue: json['MET_VALUE'] ?? 0,
       transId: json['TRANS_ID'],
       metId: json['METID'],
+      TYPE: json['TYPE'],
       goldRate: json['GOLDRATE'],
     );
   }
@@ -73,6 +76,7 @@ class LedgerData {
       'MET_VALUE': metValue,
       'TRANS_ID': transId,
       'METID': metId,
+      'TYPE': TYPE,
       'GOLDRATE': goldRate,
     };
   }

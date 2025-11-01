@@ -13,10 +13,9 @@ class GoldSilverRateResponse {
     return GoldSilverRateResponse(
       success: json['success'] ?? 0,
       message: json['message'] ?? '',
-      data:
-          (json['data'] as List<dynamic>?)
-              ?.map((e) => GoldSilverData.fromJson(e))
-              .toList() ??
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => GoldSilverData.fromJson(e))
+          .toList() ??
           [],
     );
   }
@@ -33,12 +32,25 @@ class GoldSilverRateResponse {
 class GoldSilverData {
   final int gold;
   final int silver;
+  final DateTime dateTime;
 
-  GoldSilverData({required this.gold, required this.silver});
+  GoldSilverData({
+    required this.gold,
+    required this.silver,
+    required this.dateTime,
+  });
 
   factory GoldSilverData.fromJson(Map<String, dynamic> json) {
-    return GoldSilverData(gold: json['GOLD']?? 0, silver: json['SILVER']?? 0);
+    return GoldSilverData(
+      gold: json['GOLD'] ?? 0,
+      silver: json['SILVER'] ?? 0,
+      dateTime: DateTime.tryParse(json['DATETIME'] ?? '') ?? DateTime(1970),
+    );
   }
 
-  Map<String, dynamic> toJson() => {'GOLD': gold, 'SILVER': silver};
+  Map<String, dynamic> toJson() => {
+    'GOLD': gold,
+    'SILVER': silver,
+    'DATETIME': dateTime.toIso8601String(),
+  };
 }

@@ -64,6 +64,7 @@ class LoginController extends GetxController {
     required String mobileNo,
     required String aadhar,
     required String pan,
+    required String pinCode,
     required String address1,
     String? address2,
     required String city,
@@ -85,8 +86,10 @@ class LoginController extends GetxController {
         "MOBILENO": mobileNo,
         "AADHAR": aadhar,
         "PAN": pan,
+
         "ADDRESS1": address1,
         "ADDRESS2": address2 ?? '',
+        "PINCODE": pinCode,
         "CITY": city,
         "STATE": state,
         "COUNTRY": country,
@@ -94,7 +97,8 @@ class LoginController extends GetxController {
         "MPIN": mpin,
         "ACT": "Y",
       });
-
+      AppLogger.log.i(url);
+      AppLogger.log.i(body);
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},

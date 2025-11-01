@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool isEditing = false;
 
-  // Controllers
+
   final nameController = TextEditingController();
   final addressController = TextEditingController();
   final stateController = TextEditingController();
@@ -99,6 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // 🔹 Call your LoginController’s registerUser (update endpoint)
     controller.registerUser(
+      pinCode: pincodeController.text.trim().toString(),
       page: 'profile',
       fName: firstName,
       lName: lastName,
@@ -158,39 +159,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: customer == null
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: _loadUserData,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildProfileHeader(),
-                      const SizedBox(height: 20),
+        onRefresh: _loadUserData,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _buildProfileHeader(),
+                const SizedBox(height: 20),
 
-                      _buildSectionTitle("Personal Details"),
-                      _buildTextField("Name", nameController),
+                _buildSectionTitle("Personal Details"),
+                _buildTextField("Name", nameController),
 
-                      _buildTextField("Aadhar Number", aadharController),
-                      _buildTextField("PAN Number", panController),
+                _buildTextField("Aadhar Number", aadharController),
+                _buildTextField("PAN Number", panController),
 
-                      const SizedBox(height: 10),
-                      _buildSectionTitle("Address"),
-                      _buildTextField("Address", addressController),
-                      _buildTextField("City / State", stateController),
-                      _buildTextField("Country", countryController),
-                      _buildTextField("Pincode", pincodeController),
+                const SizedBox(height: 10),
+                _buildSectionTitle("Address"),
+                _buildTextField("Address", addressController),
+                _buildTextField("City / State", stateController),
+                _buildTextField("Country", countryController),
+                _buildTextField("Pincode", pincodeController),
 
-                      const SizedBox(height: 30),
-                    ],
-                  ),
-                ),
-              ),
+                const SizedBox(height: 30),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 

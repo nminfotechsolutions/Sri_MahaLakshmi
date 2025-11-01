@@ -14,8 +14,14 @@ import '../model/scheme_type_response.dart';
 
 class CustomerDetailsScreen extends StatefulWidget {
   final String? page;
+  final String metId;
   final double? enteredAmount;
-  const CustomerDetailsScreen({super.key, this.page, this.enteredAmount});
+  const CustomerDetailsScreen({
+    super.key,
+    this.page,
+    this.enteredAmount,
+    required this.metId,
+  });
 
   @override
   State<CustomerDetailsScreen> createState() => _CustomerDetailsScreenState();
@@ -39,6 +45,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    AppLogger.log.i(widget.metId);
     print('Iam Entered Amount ${widget.enteredAmount}');
     if (widget.page == 'MyPlan') {
       mySchemeData = Get.arguments as MySchemeData;
@@ -69,10 +76,10 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
         setState(() {
           nameController.text =
               "${customer.firstName ?? ''} ${customer.lastName ?? ''}".trim();
-          addressController.text =customer.address1??'';
-              // "${customer.address1 ?? ''}, ${customer.address2 ?? ''}"
-              //     .replaceAll(', ,', ',')
-              //     .trim();
+          addressController.text = customer.address1 ?? '';
+          // "${customer.address1 ?? ''}, ${customer.address2 ?? ''}"
+          //     .replaceAll(', ,', ',')
+          //     .trim();
           stateController.text = customer.state ?? '';
           cityController.text = customer.city ?? '';
           countryController.text = customer.country ?? '';
@@ -297,6 +304,7 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                     : '';
 
                 final success = await controller.registerUser(
+                  pinCode: pincodeController.text.trim().toString(),
                   page: widget.page,
                   fName: firstName,
                   lName: lastName,
@@ -332,7 +340,8 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
                   AppLogger.log.i(updatedData);
 
                   Get.to(
-                    () => SchemeSummaryScreen(
+                        () => SchemeSummaryScreen(
+                      metId: widget.metId,
                       city: cityController.text.trim(),
                       fullName: nameController.text,
                       enteredAmount: widget.enteredAmount,
@@ -499,13 +508,13 @@ class _CustomerDetailsScreenState extends State<CustomerDetailsScreen> {
   }
 
   Widget buildBoldTextField(
-    String label,
-    TextEditingController controller, {
-    IconData? icon,
-    TextInputType keyboard = TextInputType.text,
-    String? Function(String?)? validator,
-    List<TextInputFormatter>? inputFormatters,
-  }) {
+      String label,
+      TextEditingController controller, {
+        IconData? icon,
+        TextInputType keyboard = TextInputType.text,
+        String? Function(String?)? validator,
+        List<TextInputFormatter>? inputFormatters,
+      }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

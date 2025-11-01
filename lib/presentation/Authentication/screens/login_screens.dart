@@ -213,71 +213,71 @@ class _LoginScreensState extends State<LoginScreens> {
                             Obx(() {
                               return controller.isPasswordEnabled.value
                                   ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Password',
-                                          style: GoogleFonts.ibmPlexSans(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColor.lightBlack,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Password',
+                                    style: GoogleFonts.ibmPlexSans(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColor.lightBlack,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextField(
+                                    controller: password,
+                                    obscureText: false,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    decoration: InputDecoration(
+                                      hintText: "Enter your Password",
+                                      hintStyle: const TextStyle(
+                                        color: Colors.black45,
+                                      ),
+                                      prefixIcon: const Icon(
+                                        Icons.lock,
+                                        color: Colors.teal,
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                          color: Colors.teal,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(14),
+                                        borderSide: const BorderSide(
+                                          color: Colors.teal,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {},
+                                        child: const Text(
+                                          "Forgot Password?",
+                                          style: TextStyle(
+                                            color: Colors.black54,
                                           ),
                                         ),
-                                        const SizedBox(height: 10),
-                                        TextField(
-                                          controller: password,
-                                          obscureText: false,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                          ),
-                                          decoration: InputDecoration(
-                                            hintText: "Enter your Password",
-                                            hintStyle: const TextStyle(
-                                              color: Colors.black45,
-                                            ),
-                                            prefixIcon: const Icon(
-                                              Icons.lock,
-                                              color: Colors.teal,
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            enabledBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              borderSide: const BorderSide(
-                                                color: Colors.teal,
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              borderSide: const BorderSide(
-                                                color: Colors.teal,
-                                                width: 2,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            TextButton(
-                                              onPressed: () {},
-                                              child: const Text(
-                                                "Forgot Password?",
-                                                style: TextStyle(
-                                                  color: Colors.black54,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      ),
+                                    ],
+                                  ),
 
-                                        SizedBox(height: 5),
-                                      ],
-                                    )
+                                  SizedBox(height: 5),
+                                ],
+                              )
                                   : const SizedBox.shrink();
                             }),
 
@@ -316,17 +316,17 @@ class _LoginScreensState extends State<LoginScreens> {
                               },
                             ),
 
-                            SizedBox(height: 30),
+                            SizedBox(height: 50),
 
                             Text.rich(
                               TextSpan(
-                                text: "Don't have an Account? ",
+                                text: "Version",
                                 style: const TextStyle(color: Colors.black87),
                                 children: [
                                   TextSpan(
-                                    text: "Sign up",
+                                    text: " 1.0.0",
                                     style: GoogleFonts.ibmPlexSans(
-                                      fontSize: 15,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                       color: AppColor.lightBlack.withOpacity(
                                         0.5,

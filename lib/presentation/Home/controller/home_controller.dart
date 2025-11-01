@@ -22,13 +22,13 @@ class HomeController extends GetxController {
 
       final body = jsonEncode({"UPDATETYPE": ""});
       final response = await http.post(
-        Uri.parse(ApiUrl.rateMastUpdate),
+          Uri.parse(ApiUrl.rateMastUpdate),
 
-        headers: {"Content-Type": "application/json"},
-        body: body
+          headers: {"Content-Type": "application/json"},
+          body: body
       );
-AppLogger.log.i(ApiUrl.rateMastUpdate);
-AppLogger.log.i(body);
+      AppLogger.log.i(ApiUrl.rateMastUpdate);
+      AppLogger.log.i(body);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 

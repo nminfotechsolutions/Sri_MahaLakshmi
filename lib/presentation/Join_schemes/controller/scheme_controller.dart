@@ -51,6 +51,7 @@ class SchemeController extends GetxController {
     required String status,
     required String transId,
     required String panNo,
+    required String metId,
     required int chitId,
     required int goldRate,
     required int silverRate,
@@ -90,7 +91,7 @@ class SchemeController extends GetxController {
         "ADHARNO": aadharNo,
         "PANNO": panNo,
         "CHITID": chitId,
-        "METID": "",
+        "METID": metId,
         "TRANS_ID": transId,
         "STATUS": status,
       });

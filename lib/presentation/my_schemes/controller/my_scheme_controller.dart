@@ -27,7 +27,6 @@ class MySchemeController extends GetxController {
 
       print("Raw user data from SharedPreferences: $userDataString");
 
-      // Check if user data exists
       if (userDataString == null) {
         print("⚠️ No user data found in SharedPreferences");
         return;

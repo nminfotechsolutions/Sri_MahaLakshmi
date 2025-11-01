@@ -273,6 +273,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           final success = await controller.registerUser(
+                            pinCode: '',
                             fName: fNameController.text.trim(),
                             lName: lNameController.text.trim(),
                             email: emailController.text.trim(),
@@ -287,12 +288,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             mpin: mpinController.text.trim(),
                           );
                           if (success) {
-                            // ✅ Navigate only when registration succeeds
                             Get.offAll(() => HomeScreen());
                           } else {
                             // ❌ Show error message from controller
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(controller.errorMessage.value)),
+                              SnackBar(
+                                content: Text(controller.errorMessage.value),
+                              ),
                             );
                           }
                         }

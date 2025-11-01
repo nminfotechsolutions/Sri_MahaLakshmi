@@ -17,6 +17,8 @@ import '../../Join_schemes/controller/scheme_controller.dart';
 import '../../Join_schemes/screens/customer_details_screen.dart';
 import '../../Join_schemes/screens/join_now_screens.dart';
 import '../../my_schemes/screens/my_plan_screens.dart';
+import 'package:intl/intl.dart';
+import 'package:marquee/marquee.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -290,6 +292,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 10),
+                      Container(
+                        height: 30,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.05),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Obx(() {
+                          if (controller.goldAndSilverRateData.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "Fetching latest gold & silver rate...",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            );
+                          }
+
+                          final lastUpdated =
+                              controller.goldAndSilverRateData.first.dateTime;
+                          final formattedDate = DateFormat(
+                            'dd MMM yyyy, hh:mm a',
+                          ).format(lastUpdated);
+
+                          return Marquee(
+                            text:
+                            "🔔  Last Gold and Silver Rate Updated on $formattedDate",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            velocity: 30.0,
+                            blankSpace: 60.0,
+                            pauseAfterRound: Duration(seconds: 1),
+                            startPadding: 10.0,
+                            accelerationDuration: Duration(seconds: 1),
+                            decelerationDuration: Duration(milliseconds: 500),
+                          );
+                        }),
+                      ),
 
                       // ClipPath(
                       //   clipper: ConcaveClipper(),
@@ -421,44 +467,44 @@ class _HomeScreenState extends State<HomeScreen> {
                           viewportFraction: 0.75,
                         ),
                         items:
-                            [
-                              AppImages.banner_1,
-                              AppImages.banner_2,
-                              AppImages.banner_1,
-                            ].map((imagePath) {
-                              return Builder(
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    width:
-                                        MediaQuery.of(context).size.width *
-                                        0.85, // slightly wider
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 5.0,
+                        [
+                          AppImages.banner_1,
+                          AppImages.banner_2,
+                          AppImages.banner_1,
+                        ].map((imagePath) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                width:
+                                MediaQuery.of(context).size.width *
+                                    0.85, // slightly wider
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    10,
+                                  ), // border radius 10
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 5,
+                                      offset: Offset(0, 3),
                                     ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                        10,
-                                      ), // border radius 10
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 3),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset(
-                                        imagePath,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                },
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    imagePath,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               );
-                            }).toList(),
+                            },
+                          );
+                        }).toList(),
                       ),
                       SizedBox(height: 40),
 
@@ -983,7 +1029,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     } else {
                                       Get.to(
-                                        () => CustomerDetailsScreen(),
+                                            () => CustomerDetailsScreen(metId: scheme.METID,),
                                         arguments: scheme,
                                       );
                                     }
@@ -1151,7 +1197,6 @@ class _HomeScreenState extends State<HomeScreen> {
             }),
             const SizedBox(height: 24),
 
-            // Proceed Button with gradient
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -1159,7 +1204,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (enteredAmount.value > 0) {
                     Get.back(); // Close BottomSheet
                     Get.to(
-                      () => CustomerDetailsScreen(
+                          () => CustomerDetailsScreen(
+                        metId: scheme.METID,
                         enteredAmount: enteredAmount.value,
                       ), // ✅ pass .value
                       arguments: scheme,
@@ -1276,8 +1322,8 @@ class _BouncePressButtonState extends State<BouncePressButton> {
             gradient: LinearGradient(
               colors: _isPressed
                   ? widget.gradientColors
-                        .map((c) => c.withOpacity(0.7))
-                        .toList()
+                  .map((c) => c.withOpacity(0.7))
+                  .toList()
                   : widget.gradientColors,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

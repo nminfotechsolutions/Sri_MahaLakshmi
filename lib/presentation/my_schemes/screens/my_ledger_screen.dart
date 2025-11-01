@@ -63,12 +63,11 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                       icon: const Icon(Icons.chevron_left),
                     ),
                     AppTextStyles.textWith600(text: 'My Ledger'),
-                    const SizedBox(width: 48), // For symmetry
+                    const SizedBox(width: 48),
                   ],
                 ),
               ),
 
-              // 🔹 Ledger Content
               Expanded(
                 child: Obx(() {
                   final ledgerList = controller.myLedgerData;
@@ -78,17 +77,17 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                     return sum + amt;
                   });
 
-                  final totalMetValue = ledgerList.fold<num>(0, (sum, item) {
-                    return sum + (item.metValue ?? 0);
-                  });
+                  final totalMetValue = ledgerList.fold<num>(
+                    0,
+                        (sum, item) => sum + (item.metValue ?? 0),
+                  );
 
                   final showMetValue = ledgerList.any(
-                    (item) => item.metValue != 0,
+                        (item) => item.TYPE == "G",
                   );
 
                   return Column(
                     children: [
-                      // 🔹 Header Info
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Container(
@@ -111,7 +110,6 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Left Info
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +142,6 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                                   ],
                                 ),
                               ),
-                              // Right Info
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
@@ -163,179 +160,112 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                         ),
                       ),
 
-                      // 🔹 Table Header
-                      Container(
-                        color: Colors.grey[200],
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 12,
-                        ),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              flex: 1,
-                              child: Text(
-                                'SNo',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            if (showMetValue)
-                              const Expanded(
-                                flex: 2,
-                                child: Text(
-                                  'Weight',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            const Expanded(
-                              flex: 3,
-                              child: Text(
-                                'Paid Date',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Amount',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Gold Rate',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const Expanded(
-                              flex: 2,
-                              child: Text(
-                                'TransId',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // 🔹 Ledger List
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: ledgerList.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index == ledgerList.length) {
-                              // ✅ Total Row
-                              return Container(
-                                color: Colors.teal.shade50,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                  horizontal: 12,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              headingRowColor: MaterialStateColor.resolveWith(
+                                    (states) => Colors.grey.shade200,
+                              ),
+                              dataRowColor: MaterialStateColor.resolveWith(
+                                    (states) =>
+                                states.contains(MaterialState.selected)
+                                    ? Colors.teal.shade50
+                                    : Colors.white,
+                              ),
+                              columnSpacing: 24,
+                              border: TableBorder.symmetric(
+                                inside: const BorderSide(
+                                  color: Colors.grey,
+                                  width: 0.2,
                                 ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'TOTAL',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.teal,
+                              ),
+                              columns: [
+                                const DataColumn(label: Text('SNo')),
+                                if (showMetValue)
+                                  const DataColumn(label: Text('Weight')),
+                                const DataColumn(label: Text('Paid Date')),
+                                const DataColumn(label: Text('Amount')),
+                                const DataColumn(label: Text('Gold Rate')),
+                                const DataColumn(label: Text('TransId')),
+                              ],
+                              rows: [
+                                ...List.generate(ledgerList.length, (index) {
+                                  final item = ledgerList[index];
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(Text('${index + 1}')),
+                                      if (showMetValue)
+                                        DataCell(
+                                          Text(
+                                            (item.metValue ?? 0)
+                                                .toStringAsFixed(3),
+                                          ),
+                                        ),
+                                      DataCell(
+                                        Text(
+                                          item.date != null
+                                              ? DateFormat(
+                                            'dd MMM yyyy',
+                                          ).format(item.date!)
+                                              : '',
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text('₹${item.collection ?? ''}'),
+                                      ),
+                                      DataCell(
+                                        Text(item.goldRate?.toString() ?? ''),
+                                      ),
+                                      DataCell(
+                                        Text(item.transId?.toString() ?? ''),
+                                      ),
+                                    ],
+                                  );
+                                }),
+
+                                // 🔹 Total Row
+                                DataRow(
+                                  color: MaterialStateProperty.all(
+                                    Colors.teal.shade50,
+                                  ),
+                                  cells: [
+                                    const DataCell(
+                                      Text(
+                                        'TOTAL',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal,
+                                        ),
                                       ),
                                     ),
                                     if (showMetValue)
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          totalMetValue.toStringAsFixed(2),
-                                          textAlign: TextAlign.right,
+                                      DataCell(
+                                        Text(
+                                          totalMetValue.toStringAsFixed(3),
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                    const Expanded(flex: 3, child: SizedBox()),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
+                                    const DataCell(Text('')),
+                                    DataCell(
+                                      Text(
                                         '₹${totalAmount.toStringAsFixed(2)}',
-                                        textAlign: TextAlign.right,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    const Expanded(flex: 2, child: SizedBox()),
-                                    const Expanded(flex: 2, child: SizedBox()),
+                                    const DataCell(Text('')),
+                                    const DataCell(Text('')),
                                   ],
                                 ),
-                              );
-                            }
-
-                            final item = ledgerList[index];
-                            final rowColor = index.isEven
-                                ? Colors.white
-                                : Colors.grey[50];
-
-                            return Container(
-                              color: rowColor,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 12,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(item.sNo ?? ''),
-                                  ),
-                                  if (showMetValue)
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        (item.metValue ?? 0).toStringAsFixed(2),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      item.date != null
-                                          ? DateFormat(
-                                              'dd MMM yyyy',
-                                            ).format(item.date!)
-                                          : '',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      '₹${item.collection ?? ''}',
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      item.goldRate?.toString() ?? '',
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 2,
-                                    child: Text(
-                                      item.transId?.toString() ?? '',
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -396,7 +326,7 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
 
                   // ⚙️ Show weight column only if any entry has metValue
                   final showMetValue = ledgerList.any(
-                    (item) => item.metValue != 0,
+                        (item) => item.metValue != 0,
                   );
 
                   return Column(
@@ -622,8 +552,8 @@ class _MyLedgerScreenState extends State<MyLedgerScreen> {
                                     child: Text(
                                       item.date != null
                                           ? DateFormat(
-                                              'dd MMM yyyy',
-                                            ).format(item.date!)
+                                        'dd MMM yyyy',
+                                      ).format(item.date!)
                                           : '',
                                       textAlign: TextAlign.right,
                                     ),
